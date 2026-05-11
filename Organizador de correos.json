@@ -1,0 +1,350 @@
+{
+  "name": "Organizador de correos",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {}
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -480,
+        16
+      ],
+      "id": "8eda95d3-0697-4849-94e0-5e5a6d31eeff",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QZfeVFckr58y7Pxe",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.From }}",
+                    "rightValue": "Fiverr",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "5bb3c1c6-4c9b-40a7-b600-bd0c2641c8f5"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "=Fiverr"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "0b4d8429-319b-41b0-ae5a-4de6fd233b53",
+                    "leftValue": "={{ $json.From }}",
+                    "rightValue": "Epic Games",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Juegos"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "f5a9e4e7-364d-4c3a-bed7-e58348701fc3",
+                    "leftValue": "={{ $json.From }}",
+                    "rightValue": "Global66",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Pagos Internacionales"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -288,
+        16
+      ],
+      "id": "47ef525b-4a27-4d73-8385-aaffc41f7479",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $json.id }}",
+        "labelIds": [
+          "Label_7704484115527664830"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        -64
+      ],
+      "id": "e6f4d41b-a90d-4de4-8301-71bf63e0aaf4",
+      "name": "Etiqueta Fiverr",
+      "webhookId": "df9e5774-750e-4151-9de7-102e7a337a24",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QZfeVFckr58y7Pxe",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "labelIds": [
+          "Label_587492354812827356"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        160,
+        48
+      ],
+      "id": "71d2fd9d-51fd-4b09-abfc-2b5c5196819f",
+      "name": "Etiqueta Juegos",
+      "webhookId": "38d35eef-03af-4fca-ab49-446187a6da2e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QZfeVFckr58y7Pxe",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "labelIds": [
+          "Label_6222591384769581345"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -64,
+        160
+      ],
+      "id": "bfc8e89d-48d6-411d-bff9-5d71b960a1b2",
+      "name": "Etiqueta Pagos",
+      "webhookId": "3b21d8c9-cc99-4193-aacc-2d13cfb2eef2",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QZfeVFckr58y7Pxe",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "removeLabels",
+        "messageId": "={{ $json.id }}",
+        "labelIds": [
+          "INBOX"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        208,
+        -128
+      ],
+      "id": "d745e75c-3e49-4910-87d3-98fa03b3ab02",
+      "name": "Remove label from message",
+      "webhookId": "ae3f764e-8af5-454d-bd04-374a0bda5dcc",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QZfeVFckr58y7Pxe",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "removeLabels",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "labelIds": [
+          "INBOX"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        368,
+        48
+      ],
+      "id": "eaa0dc05-72d3-4f74-ac5c-e98c2f0cd61d",
+      "name": "Remove label from message1",
+      "webhookId": "2a285a7c-1b8e-4320-85d8-cad3192f19e0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QZfeVFckr58y7Pxe",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "removeLabels",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "labelIds": [
+          "INBOX"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        144,
+        288
+      ],
+      "id": "b37ed0c3-8ed7-4b84-90fc-3ece03684573",
+      "name": "Remove label from message2",
+      "webhookId": "4a3d7305-bac0-4ebc-af12-fc6fd8fffb6a",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QZfeVFckr58y7Pxe",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Etiqueta Fiverr",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Etiqueta Juegos",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Etiqueta Pagos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Etiqueta Fiverr": {
+      "main": [
+        [
+          {
+            "node": "Remove label from message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Etiqueta Juegos": {
+      "main": [
+        [
+          {
+            "node": "Remove label from message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Etiqueta Pagos": {
+      "main": [
+        [
+          {
+            "node": "Remove label from message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": -1,
+    "availableInMCP": false
+  },
+  "versionId": "f5073fc2-a7d6-41bf-a111-83a8b9d79162",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "950333a3ec38529494b79155ca5e5561daacdcd1e6ed0f65d5a80ebddd7f87b1"
+  },
+  "id": "gNYurGTPgPvjp1Nq",
+  "tags": []
+}
